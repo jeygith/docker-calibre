@@ -22,6 +22,7 @@ RUN \
 	python-xdg \
 	ttf-wqy-zenhei \
 	wget \
+	cron \
 	xz-utils && \
  echo "**** install calibre ****" && \
  mkdir -p \
@@ -48,3 +49,14 @@ RUN \
 
 # add local files
 COPY root/ /
+
+# Add crontab file in the cron directory
+COPY crontab /etc/cron.d/crontab
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/crontab
+
+# Apply cron job
+RUN /usr/bin/crontab /etc/cron.d/crontab
+
+CMD ["cron", "-f"]
